@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smbms.mapper.UserMapper">
+    <select id="getList" resultType="User">
+      select * from smbms_user
+    </select>
+    <insert id="addUser" parameterType="User">
+        insert into  smbms_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="userCode != null">
+                userCode,
+            </if>
+            <if test="userName != null">
+                userName,
+            </if>
+            <if test="userPassword != null">
+                userPassword,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="userRole != null">
+                userRole,
+            </if>
+            <if test="createdBy != null">
+                createdBy,
+            </if>
+            <if test="creationDate != null">
+                creationDate,
+            </if>
+            <if test="modifyBy != null">
+                modifyBy,
+            </if>
+            <if test="modifyDate != null">
+                modifyDate,
+            </if>
+            <if test="idPicPath != null">
+                idPicPath,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userCode != null">
+                #{userCode},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="userPassword != null">
+                #{userPassword},
+            </if>
+            <if test="gender != null">
+                #{gender},
+            </if>
+            <if test="birthday != null">
+                #{birthday},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="userRole != null">
+                #{userRole},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy},
+            </if>
+            <if test="creationDate != null">
+                #{creationDate},
+            </if>
+            <if test="modifyBy != null">
+                #{modifyBy},
+            </if>
+            <if test="modifyDate != null">
+                #{modifyDate},
+            </if>
+            <if test="idPicPath != null">
+                #{idPicPath},
+            </if>
+        </trim>
+    </insert>
+    <delete id="delUser"  parameterType="int">
+       DELETE FROM smbms_user where id=#{id}
+   </delete>
+    <select id="getByid" resultType="User">
+        select * from smbms_user where id=#{id}
+    </select>
+    <!--  登录验证-->
+    <select id="login" resultType="User">
+        select * from smbms_user  where
+         userCode=#{userCode} and userPassword=#{userPassword}
+    </select>
+    <!--    验证旧密码-->
+    <select id="getByPassword" resultType="User">
+        select * from smbms_user where userPassword=#{oldPassword}
+    </select>
+
+    <update id="Mpdifypwd">
+     update smbms_user  set userPassword =#{rnewpassword}  where id=#{id}
+    </update>
+    <!--    添加功能：验证UserCode-->
+    <select id="getByUserCode" resultType="User">
+        select  * from smbms_user where userCode=#{userCode}
+    </select>
+    <select id="sumCount" resultType="int">
+        SELECT COUNT(*) FROM smbms_user u,smbms_role r
+        <where>
+            u.userRole=r.id
+            <if test="userName!=null and userName!=''">
+                AND userName LIKE "%"#{userName}"%"
+            </if>
+            <if test="RoleId!=null and RoleId!=0">
+                AND  u.userRole=#{RoleId}
+            </if>
+        </where>
+    </select>
+    <resultMap id="limit" type="com.smbms.entity.User">
+        <id property="id" column="id"></id>
+        <result property="userCode" column="userCode"></result>
+        <result property="userName" column="userName"></result>
+        <result property="gender" column="gender"></result>
+        <result property="birthday" column="birthday" javaType="java.sql.Date"></result>
+        <result property="phone" column="phone"></result>
+<!--        <association property="roleName" javaType="com.smbms.entity.Role">-->
+<!--            <result property="roleName" column="roleName"></result>-->
+<!--        </association>-->
+    </resultMap>
+    <select id="PageSize" resultMap="limit">
+        SELECT userCode,userName,gender,birthday,roleName,phone FROM smbms_user u,smbms_role r
+        <where>
+            u.userRole=r.id
+            <if test="userName!=null and userName!=''">
+                AND userName LIKE  "%"#{userName}"%"
+            </if>
+            <if test="RoleId!=null and RoleId!=0">
+                AND u.userRole=#{RoleId}
+            </if>
+        </where>
+        LIMIT #{beginPage},#{pageSize}
+    </select>
+
+    <!--更具id删除-->
+    <delete id="delectUser">
+        delete from smbms_user  where id =#{userid}
+    </delete>
+    <!--    修改-->
+    <update id="modify" parameterType="com.smbms.entity.User">
+        update smbms_user  set
+        userName=#{userName},
+        gender=#{gender},
+        birthday=#{birthday},
+        phone=#{phone},
+        address=#{address},
+        userRole=#{userRole}
+        where id=#{id}
+    </update>
+
+
+</mapper>

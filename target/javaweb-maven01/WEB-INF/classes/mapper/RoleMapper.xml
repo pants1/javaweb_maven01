@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smbms.mapper.RoleMapper">
+    <insert id="addRole" >
+        insert into smbms_role (id,roleCode,roleName) values (#{role.id},#{role.roleCode},#{role.roleName});
+    </insert>
+    <select id="getroles" resultType="Role">
+        select * from smbms_role
+    </select>
+</mapper>

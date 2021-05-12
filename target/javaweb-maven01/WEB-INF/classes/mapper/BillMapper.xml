@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smbms.mapper.BillMapper">
+    <resultMap id="MyList" type="com.smbms.entity.Bill">
+        <id property="id" column="id"></id>
+        <result property="productName" column="productName"></result>
+        <result property="isPayment" column="isPayment"></result>
+        <result property="totalPrice" column="totalPrice"></result>
+        <result property="creationDate" column="creationDate"></result>
+        <association property="Provider" javaType="com.smbms.entity.Provider">
+            <result property="proName" column="proName"></result>
+        </association>
+    </resultMap>
+    <select id="getList" resultMap="MyList"  parameterType="com.smbms.entity.Bill">
+        SELECT b.id,productName,proName,isPayment,totalPrice,b.creationDate
+        FROM smbms_bill b,smbms_provider p
+        <where>
+            b.providerId=p.id
+            <if  test="productName!=null and productName!=''" >
+                AND productName like   "%"#{productName}"%"
+            </if>
+            <if test="providerId!=null">
+                and b.providerId=#{providerId}
+            </if>
+            <if test="isPayment!=null">
+                and b.isPayment=#{isPayment}
+            </if>
+        </where>
+
+    </select>
+</mapper>
